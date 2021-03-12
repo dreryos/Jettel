@@ -1,0 +1,23 @@
+Package: Jettel
+Title: Shallow API package for Trefle Integration
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Marek",
+           family = "Földi",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This packge enables interacting with the Trefle plants API in Python to get the information needed for various things you might want to use the API with such as research, gardening software, automation, etc.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends: 
+    R (>= 3.0.2),
+    usethis (>= 2.0.1)
+Imports:
+    devtools,
+    rcmdcheck,
+    httr,
+    jsonlite
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1

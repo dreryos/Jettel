@@ -8,12 +8,15 @@
 
 Jettel is small package to provide shallow API for Trefle.io
 
-## Installation 
+## Installation
 
+<!-- 
 ```R
 # Install devtools from CRAN
 install.packages("Jettel")
+-->
 
+```R
 # Or the development version from GitHub:
 # install.packages("devtools")
 devtools::install_github("dreryos/Jettel")

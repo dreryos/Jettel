@@ -121,8 +121,7 @@ search.species <- function(token = 0, species = 0){
             response <- httr::GET(paste(base_url, "species/", "search", "?", "token", "=", token, "&q=", species, sep=""))
             print("Processing...")
             response_text <- httr::content(response, as = 'text', encoding = 'UTF-8')
-            response_json <- jsonlite::fromJSON(response_text, flatten = T)   
-            print(response_json)         
+            response_json <- jsonlite::fromJSON(response_text, flatten = T)       
             if(response_json$meta$total != 0){
                 response_df <- as.data.frame(response_json)
                 return(response_df)
@@ -163,6 +162,14 @@ retrieve.plant <- function(token = 0, plant = 0){
     }
 }
 
+#' Get list of species by given ID
+#' 
+#' This function return list of data of given species
+#' @return List of data of given species
+#' @keywords data species
+#' @export
+#' @examples
+#' get.species.by.id("token", 000001)
 get.species.by.id <- function(token = 0, id){
     print("Querying...")
     sel_plant_resp <- httr::GET(paste(base_url, "species/", id, "?", "token", "=", token, sep=""))
@@ -181,6 +188,9 @@ get.species.by.id <- function(token = 0, id){
 #' @examples
 #' jettelGUI()
 jettel.gui <- function(){
+    if(!(require("sp"))){
+        install.packages("sp")
+    }
     search.query <- tcltk::tclVar("")
     key <- tcltk::tclVar("")
     key.status <- tcltk::tclVar("")
@@ -205,7 +215,7 @@ jettel.gui <- function(){
                 key.check.lab <- tcltk::tkmessage(key.check.frame, text = tcltk::tclvalue(key.status))
                 search.button <- tcltk::tkbutton(search.frame, text = "Search", command = function(){
                     if(tcltk::tclvalue(search.query) != ""){
-                        response <- search.plant(tcltk::tclvalue(key), tcltk::tclvalue(search.query))
+                        response <- search.species(tcltk::tclvalue(key), tcltk::tclvalue(search.query))
                         if(response != "Blank"){
                             #creates window for choosing a entry
                             resp.win <- tcltk::tktoplevel(gui)
@@ -215,35 +225,75 @@ jettel.gui <- function(){
                             tcltk::tkbind(list, '<Double-Button>', function(){
                                 #displays selected entry
                                 entry.win <- tcltk::tktoplevel(resp.win)
-                                sel.plant <- get.species.by.id(key, response$data.id[response$data.scientific_name == tcltk::tclvalue(tcltk::tkXselection.get())])
-                                #tcltk::tktitle(entry.win) <- paste("Detail of", tcltk::tclVar(sel.plant$data$scientific_name))
+                                sel.plant <- get.species.by.id(token = tcltk::tclvalue(key), id = response$data.id[response$data.scientific_name == tcltk::tclvalue(tcltk::tkXselection.get())])
+                                tcltk::tktitle(entry.win) <- paste("Detail of", sel.plant$data$scientific_name)
                                 #names of plant
                                 entry.label <- tcltk::tklabel(entry.win, text = sel.plant$data$scientific_name, font = (size = 25))
                                 entry.common_name <- tcltk::tklabel(entry.win, text = sel.plant$data$common_name)
+                                #medium section frame
+                                entry.medium.frame <- tcltk::tkframe(entry.win)
+                                #info frame
+                                entry.info.frame <- tcltk::tkframe(entry.medium.frame)
                                 #IDs in database
-                                entry.id.frame <- tcltk::tkframe(entry.win)
-                                entry.id <- tcltk::tklabel(entry.id.frame, text = paste("ID: ", response$data$id))
-                                entry.slug <- tcltk::tklabel(entry.id.frame, text = response$data$slug)
+                                entry.id.frame <- tcltk::tkframe(entry.info.frame)
+                                entry.id <- tcltk::tklabel(entry.id.frame, text = paste("ID: ", sel.plant$data$id))
+                                entry.slug <- tcltk::tklabel(entry.id.frame, text = sel.plant$data$slug)
                                 tcltk::tkpack(entry.id, entry.slug, side = "left")
                                 #plant bibliography
-                                entry.bib <- tcltk::tklabel(entry.win, text = paste("In: ", response$data$bibliography, " by: ", response$data$author))
+                                entry.bib <- tcltk::tklabel(entry.info.frame, text = paste("In: ", sel.plant$data$bibliography, " by: ", sel.plant$data$author))
                                 #plant family
-                                entry.family.frame <- tcltk::tkframe(entry.win)
-                                entry.family.science <- tcltk::tklabel(entry.family.frame, text = response$data$family)
-                                entry.family.common <- tcltk::tklabel(entry.family.frame, text = response$data$family_common_name)
+                                entry.family.frame <- tcltk::tkframe(entry.info.frame)
+                                entry.family.science <- tcltk::tklabel(entry.family.frame, text = sel.plant$data$family)
+                                entry.family.common <- tcltk::tklabel(entry.family.frame, text = sel.plant$data$family_common_name)
                                 tcltk::tkpack(entry.family.science, entry.family.common, side = "left")
                                 #plant synonyms
-                                entry.syn.frame <- tcltk::tkframe(entry.win)
-                                entry.syn.lab <- tcltk::tklabel(entry.syn.frame, text = "List of synonyms (might be scrollable)")
-                                entry.syn <- tcltk::tklistbox(entry.syn.frame, listvariable = tcltk::tclVar(unlist(response$data$synonyms)), height = 3, selectmode = "browse", width = 0)
+                                entry.syn.frame <- tcltk::tkframe(entry.info.frame)
+                                entry.syn.lab <- tcltk::tklabel(entry.syn.frame, text = paste("List of synonyms (", length(sel.plant$data$synonyms[,"name"]) ,") (might be scrollable)", sep =""))
+                                entry.syn <- tcltk::tklistbox(entry.syn.frame, listvariable = tcltk::tclVar(unlist(sel.plant$data$synonyms[,"name"])), height = 3, selectmode = "browse", width = 0)
                                 #entry.syn.src <- tcltk::ttkscrollbar(entry.syn.frame)
                                 #tcltk::tkconfigure(entry.syn, yscrollcommand = tcltk::tkset(entry.syn.src))
                                 #tcltk::tkconfigure(entry.syn.src, command = tcltk::tkyview(entry.syn))
                                 tcltk::tkpack(entry.syn.lab, entry.syn, side = "top")
+                                tcltk::tkpack(entry.id.frame, entry.bib, entry.family.frame, entry.syn.frame)
+                                #Distribution map
+                                entry.distribution.frame <- tcltk::tkframe(entry.medium.frame)
+                                entry.distribution.but <- tcltk::tkbutton(entry.distribution.frame, text = "Map of distribution", command = function(){
+                                    file <- tempfile(fileext = ".png")
+                                    png(file, width = 900)
+                                    geo <- geojsonio::geojson_read("https://raw.githubusercontent.com/tdwg/wgsrpd/master/geojson/level3.geojson",  what = "sp")
+                                    plot(geo)
+                                    for(n in sel.plant$data$distribution$native){
+                                        plot(geo[geo@data$LEVEL3_NAM == n, ], col = "red", add = T)
+                                    }
+                                    for(i in sel.plant$data$distribution$introduced){
+                                        plot(geo[geo@data$LEVEL3_NAM == i, ], col = "yellow", add = T)
+                                    }
+                                    legend(x = "topright", legend = c("Native", "Introduced"), fill = c("red", "yellow"))
+                                    dev.off()
+                                    map <- tcltk::tktoplevel(entry.win)
+                                    tcltk::tktitle(map) <- paste("Map of",sel.plant$data$scientific_name)
+                                    tcltk::tcl("image", "create", "photo", "imageMap", file = file)
+                                    file.remove(file)
+                                    map.image <- tcltk::ttklabel(map, image = "imageMap", compound="image")
+                                    map.text.frame <- tcltk::tkframe(map)
+                                    text.native.frame <- tcltk::tkframe(map.text.frame)
+                                    text.introduced.frame <- tcltk::tkframe(map.text.frame)
+                                    text.native <- tcltk::tklabel(text.native.frame, text = "Native locations:")
+                                    list.native <- tcltk::tklistbox(text.native.frame, listvariable = tcltk::tclVar(unlist(sel.plant$data$distribution$native)))
+                                    tcltk::tkpack(text.native, list.native)
+                                    text.introduced <- tcltk::tklabel(text.introduced.frame, text = "Introduced locations:")
+                                    list.introduced <- tcltk::tklistbox(text.introduced.frame, listvariable = tcltk::tclVar(unlist(sel.plant$data$distribution$introduced)))
+                                    tcltk::tkpack(text.introduced, list.introduced)
+                                    tcltk::tkpack(text.native.frame, text.introduced.frame, side = "left")
+                                    tcltk::tkpack(map.image, map.text.frame)                                    
+                                })
+                                observations <- tcltk::tklabel(entry.distribution.frame, text = paste("Observations :", sel.plant$data$observations))
+                                tcltk::tkpack(observations, entry.distribution.but)
+                                tcltk::tkpack(entry.info.frame, entry.distribution.frame, side = "left")                     
                                 #image of plant
                                 entry.image.frame <- tcltk::tkframe(entry.win)
-                                if(is.na(response$data$image_url) != TRUE){
-                                    image.url <- response$data$image_url
+                                if(is.na(sel.plant$data$image_url) != TRUE){
+                                    image.url <- sel.plant$data$image_url
                                     z <- paste(tempfile(), ".jpg", sep = "")
                                     download.file(image.url,z,mode="wb")                                    
                                     jpgPIC <- jpeg::readJPEG(z)
@@ -258,7 +308,7 @@ jettel.gui <- function(){
                                     no.image <- tcltk::tklabel(entry.image.frame, text = "There's no image of this entry")
                                     tcltk::tkpack(no.image)
                                 }
-                                tcltk::tkpack(entry.label, entry.common_name, entry.id.frame, entry.bib, entry.family.frame, entry.syn.frame, entry.image.frame)
+                                tcltk::tkpack(entry.label, entry.common_name, entry.medium.frame, entry.image.frame)
                             })
                             tcltk::tkpack(resp.lab,list)
                         }else{

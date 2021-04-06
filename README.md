@@ -23,4 +23,4 @@ devtools::install_github("dreryos/Jettel", dependencies = TRUE)
 ```
 
 ## Usage
-<jettel.gui()> starts GUI for Trefle API written in TclTk in R.
+`jettel.gui()` starts GUI for Trefle API written in TclTk in R.

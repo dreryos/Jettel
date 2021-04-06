@@ -4,7 +4,7 @@
 \alias{retrieve.plant}
 \title{Get dataframe of only one plant selected form searched plants}
 \usage{
-retrieve.plant(token = 0, plant = 0)
+retrieve.plant(token = 0, plant = "")
 }
 \arguments{
 \item{token}{User token, string, default null.}

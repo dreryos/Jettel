@@ -10,6 +10,6 @@ jettel.gui()
 Simple GUI for this package created using tcltk
 }
 \examples{
-jettelGUI()
+jettel.gui()
 }
 \keyword{GUI}

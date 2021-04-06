@@ -4,7 +4,12 @@
 \alias{get.species.by.id}
 \title{Get JSON list of species by given ID}
 \usage{
-get.species.by.id(token = 0, id)
+get.species.by.id(token = 0, id = 0)
+}
+\arguments{
+\item{token}{User token, string, default null.}
+
+\item{id}{ID of species, integer, default null.}
 }
 \value{
 List of data of given species

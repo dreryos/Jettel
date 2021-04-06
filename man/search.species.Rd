@@ -4,7 +4,7 @@
 \alias{search.species}
 \title{Get all species which satisfy given search criteria}
 \usage{
-search.species(token = 0, species = 0)
+search.species(token = 0, species = "")
 }
 \arguments{
 \item{token}{User token, string, default null.}

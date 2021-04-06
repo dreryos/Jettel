@@ -4,12 +4,12 @@
 \alias{retrieve.species}
 \title{Get dataframe of only one species selected form searched plants}
 \usage{
-retrieve.species(token = 0, plant = 0)
+retrieve.species(token = 0, species = "")
 }
 \arguments{
 \item{token}{User token, string, default null.}
 
-\item{plant}{User query, string, default null.}
+\item{species}{User query, string, default null.}
 }
 \value{
 A dataframe of selected species, from list all plants which satisfy given search criteria
@@ -20,5 +20,5 @@ This function search plant which satisfies given query and lets user choose one 
 \examples{
 retrieve.species("token", "coconut")
 }
-\keyword{plant}
 \keyword{search}
+\keyword{species}

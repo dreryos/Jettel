@@ -4,7 +4,7 @@
 \alias{search.plant}
 \title{Get all plants which satisfy given search criteria}
 \usage{
-search.plant(token = 0, plant = 0)
+search.plant(token = 0, plant = "")
 }
 \arguments{
 \item{token}{User token, string, default null.}

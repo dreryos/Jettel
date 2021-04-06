@@ -5,6 +5,7 @@
 
 #Basic variables
 base_url <- "https://trefle.io/api/v1/"
+library(sp)
 
 #' Check Token
 #'
@@ -132,11 +133,11 @@ search.species <- function(token = 0, species = 0){
     }
 }
 
-#' Get ID of only one plant selected form searched plants
+#' Get dataframe of only one plant selected form searched plants
 #' 
 #' This function search plant which satisfies given query and lets user choose one plant.
 #' @inheritParams search.plant
-#' @return A ID of selected plant, from list all plants which satisfy given search criteria
+#' @return A dataframe of selected plant, from list all plants which satisfy given search criteria
 #' @keywords search plant
 #' @export
 #' @examples
@@ -162,7 +163,37 @@ retrieve.plant <- function(token = 0, plant = 0){
     }
 }
 
-#' Get list of species by given ID
+#' Get dataframe of only one species selected form searched plants
+#' 
+#' This function search plant which satisfies given query and lets user choose one plant.
+#' @inheritParams search.plant
+#' @return A dataframe of selected species, from list all plants which satisfy given search criteria
+#' @keywords search plant
+#' @export
+#' @examples
+#' retrieve.species("token", "coconut")
+retrieve.species <- function(token = 0, plant = 0){
+    i <- 1
+    possibilities <- search.plant(token, plant)
+    print(paste(length(possibilities$data.scientific_name), "plants were found.", sep = " "))
+    poss <- 1:length(possibilities$data.scientific_name)
+    while (i <= length(possibilities$data.scientific_name)){
+        print(paste(i, possibilities$data.scientific_name[i], sep = ": "))
+        i <- i + 1
+    }
+    user_sel <- readline("Please select plant with given number: ")
+    if(!(user_sel %in% poss)){
+        print("Invalid option selected")
+    }else{
+        print("Processing...")
+        sel_plant_resp <- httr::GET(paste(base_url, "species/", possibilities[user_sel, "data.id"], "?", "token", "=", token, sep=""))
+        sel_plant_resp_text <- httr::content(sel_plant_resp, as = 'text', encoding = 'UTF-8')
+        sel_plant_resp_json <- jsonlite::fromJSON(sel_plant_resp_text, flatten = T)
+        return(sel_plant_resp_json)
+    }
+}
+
+#' Get JSON list of species by given ID
 #' 
 #' This function return list of data of given species
 #' @return List of data of given species
@@ -188,9 +219,6 @@ get.species.by.id <- function(token = 0, id){
 #' @examples
 #' jettelGUI()
 jettel.gui <- function(){
-    if(!(require("sp"))){
-        install.packages("sp")
-    }
     search.query <- tcltk::tclVar("")
     key <- tcltk::tclVar("")
     key.status <- tcltk::tclVar("")

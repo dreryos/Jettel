@@ -16,7 +16,7 @@ A dataframe of kingdoms
 This function retrieves kingdoms
 }
 \examples{
-search.kingdom("token", "Plantae")
+search.kingdom("token")
 }
 \keyword{kingdom}
 \keyword{search}

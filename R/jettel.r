@@ -50,7 +50,7 @@ checkStatus <- function(token = 0){
 #' @keywords search kingdom
 #' @export
 #' @examples
-#' search.kingdom("token", "Plantae")
+#' search.kingdom("token")
 search.kingdom <- function(token = 0){
     isToken = F
     checkStatus = F

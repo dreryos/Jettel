@@ -80,7 +80,7 @@ search.kingdom <- function(token = 0){
 #' @export
 #' @examples
 #' search.plant("token", "coconut")
-search.plant <- function(token = 0, plant = 0){
+search.plant <- function(token = 0, plant = ""){
     isToken = F
     checkStatus = F
 
@@ -112,7 +112,7 @@ search.plant <- function(token = 0, plant = 0){
 #' @export
 #' @examples
 #' search.plant("token", "coconut")
-search.species <- function(token = 0, species = 0){
+search.species <- function(token = 0, species = ""){
     isToken = F
     checkStatus = F
 
@@ -142,7 +142,7 @@ search.species <- function(token = 0, species = 0){
 #' @export
 #' @examples
 #' retrieve.plant("token", "coconut")
-retrieve.plant <- function(token = 0, plant = 0){
+retrieve.plant <- function(token = 0, plant = ""){
     i <- 1
     possibilities <- search.plant(token, plant)
     print(paste(length(possibilities$data.scientific_name), "plants were found.", sep = " "))
@@ -166,13 +166,14 @@ retrieve.plant <- function(token = 0, plant = 0){
 #' Get dataframe of only one species selected form searched plants
 #' 
 #' This function search plant which satisfies given query and lets user choose one plant.
-#' @inheritParams search.plant
+#' @inheritParams isToken
+#' @param species User query, string, default null.
 #' @return A dataframe of selected species, from list all plants which satisfy given search criteria
-#' @keywords search plant
+#' @keywords search species
 #' @export
 #' @examples
 #' retrieve.species("token", "coconut")
-retrieve.species <- function(token = 0, plant = 0){
+retrieve.species <- function(token = 0, species = ""){
     i <- 1
     possibilities <- search.plant(token, plant)
     print(paste(length(possibilities$data.scientific_name), "plants were found.", sep = " "))
@@ -196,12 +197,14 @@ retrieve.species <- function(token = 0, plant = 0){
 #' Get JSON list of species by given ID
 #' 
 #' This function return list of data of given species
+#' @inheritParams isToken
+#' @param id ID of species, integer, default null.
 #' @return List of data of given species
 #' @keywords data species
 #' @export
 #' @examples
 #' get.species.by.id("token", 000001)
-get.species.by.id <- function(token = 0, id){
+get.species.by.id <- function(token = 0, id = 0){
     print("Querying...")
     sel_plant_resp <- httr::GET(paste(base_url, "species/", id, "?", "token", "=", token, sep=""))
     print("Processing...")
@@ -217,7 +220,7 @@ get.species.by.id <- function(token = 0, id){
 #' @keywords GUI
 #' @export
 #' @examples
-#' jettelGUI()
+#' jettel.gui()
 jettel.gui <- function(){
     search.query <- tcltk::tclVar("")
     key <- tcltk::tclVar("")

@@ -11,8 +11,7 @@ Description: This packge enables interacting with the Trefle plants API in Pytho
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: 
-    R (>= 3.0.2),
-    usethis (>= 2.0.1)
+    R (>= 3.0.2)
 Imports:
     devtools,
     rcmdcheck,

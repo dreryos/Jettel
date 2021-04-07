@@ -4,12 +4,14 @@
 \alias{search.species}
 \title{Get all species which satisfy given search criteria}
 \usage{
-search.species(token = 0, species = "")
+search.species(token = 0, species = "", page = 1)
 }
 \arguments{
 \item{token}{User token, string, default null.}
 
 \item{species}{User query, string, default null.}
+
+\item{page}{Number of page, integer, default 1.}
 }
 \value{
 A dataframe with species which satisfy given search criteria

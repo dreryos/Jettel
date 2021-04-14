@@ -5,7 +5,6 @@
 
 #Basic variables
 base_url <- "https://trefle.io/api/v1/"
-library(sp)
 library(geojsonio)
 geo <- geojsonio::geojson_read("https://raw.githubusercontent.com/tdwg/wgsrpd/master/geojson/level3.geojson",  what = "sp")
 
@@ -224,7 +223,8 @@ get.species.by.id <- function(token = 0, id = 0){
 #' Simple GUI for this package created using tcltk
 #' @keywords GUI
 #' @export
-jettel.gui <- function(){
+jettel.gui <- function(){    
+    library(sp)
     search.query <- tcltk::tclVar("")
     key <- tcltk::tclVar("")
     key.status <- tcltk::tclVar("")

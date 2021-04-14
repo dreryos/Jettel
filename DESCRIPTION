@@ -11,7 +11,8 @@ Description: This packge enables interacting with the Trefle plants API in Pytho
 License: MIT + file LICENSE
 Encoding: UTF-8
 Depends: 
-    R (>= 3.0.2)
+    R (>= 3.0.2),
+    sp
 Imports:
     rcmdcheck,
     httr,
@@ -19,7 +20,6 @@ Imports:
     tcltk,
     jpeg,
     png,
-    sp,
     geojsonio
 LazyData: true
 Roxygen: list(markdown = TRUE)

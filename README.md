@@ -6,7 +6,7 @@
 <!--[![codecov](https://codecov.io/gh/dreryos/Jettel/branch/master/graph/badge.svg?token=8SVZ0FOPRJ)](https://codecov.io/gh/dreryos/Jettel)-->
 <!-- badges: end -->
 
-Jettel is small package to provide shallow API for Trefle.io
+Jettel is small package to provide shallow API for [Trefle.io](https://trefle.io/)
 
 ## Installation
 
@@ -24,7 +24,7 @@ devtools::install_github("dreryos/Jettel", dependencies = TRUE)
 
 ## Usage
 
-`jettel.gui()` starts GUI for [Trefle API](https://trefle.io/) written in TclTk in R.
+`jettel.gui()` starts GUI for Trefle API written in TclTk in R.
 Also you have to acquire your own API key at <https://trefle.io/users/sign_up>.
 
 ## Screenshot

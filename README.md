@@ -26,3 +26,6 @@ devtools::install_github("dreryos/Jettel", dependencies = TRUE)
 
 `jettel.gui()` starts GUI for Trefle API written in TclTk in R.
 Also you have to acquire your own API key at <https://trefle.io/users/sign_up>.
+
+## Screenshot
+![mainscreenshot](https://raw.githubusercontent.com/dreryos/Jettel/main/screen.png)

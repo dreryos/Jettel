@@ -223,8 +223,7 @@ get.species.by.id <- function(token = 0, id = 0){
 #' Simple GUI for this package created using tcltk
 #' @keywords GUI
 #' @export
-jettel.gui <- function(){    
-    library(sp)
+jettel.gui <- function(){
     search.query <- tcltk::tclVar("")
     key <- tcltk::tclVar("")
     key.status <- tcltk::tclVar("")
